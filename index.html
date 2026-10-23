@@ -43,8 +43,19 @@
             box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
             text-align: center;
         }
+        .btn-secondary {
+            background-color: #475569;
+            box-shadow: 0 4px 12px rgba(71, 85, 105, 0.4);
+        }
         .btn:hover {
             opacity: 0.9;
+        }
+        #toast {
+            margin-top: 15px;
+            color: #4ade80;
+            font-size: 14px;
+            display: none;
+            font-weight: bold;
         }
     </style>
 </head>
@@ -52,13 +63,44 @@
 
     <div class="card">
         <h2>🚀 POTUZHNOLET VPN</h2>
-        <p>Нажмите кнопку для автоматического перенаправления в приложение:</p>
+        <p>Выберите способ подключения:</p>
         
-        <!-- Специальная Intent-ссылка для Android Chrome -->
-        <a class="btn" href="intent://fPgFo%2FTyzIMnuz01UgYqdU22@135.136.187.59:443?insecure=1&sni=bing.com&pinSHA256=11C6DB32405C1FB57F94D1961222FAC63BE34984B4F6C88D1A237559B08BDA02#Intent;scheme=hy2;package=app.happ.proxy;end">
-            Открыть в Hiddify
-        </a>
+        <!-- Универсальная кнопка открытия -->
+        <button class="btn" onclick="openApp()">
+            Открыть в Happ
+        </button>
+        
+        <!-- Запасная кнопка копирования -->
+        <button class="btn btn-secondary" onclick="copyConfig()">
+            Скопировать ключ
+        </button>
+        
+        <div id="toast">Ключ скопирован в буфер!</div>
     </div>
+
+    <script>
+        const rawConfig = "hy2://fPgFo%2FTyzIMnuz01UgYqdU22@135.136.187.59:443?insecure=1&sni=bing.com&pinSHA256=11C6DB32405C1FB57F94D1961222FAC63BE34984B4F6C88D1A237559B08BDA02#POTUZHNOLET";
+
+        function openApp() {
+            const isAndroid = /Android/i.test(navigator.userAgent);
+            
+            if (isAndroid) {
+                // Для Android запускаем через Intent
+                window.location.href = "intent://fPgFo%2FTyzIMnuz01UgYqdU22@135.136.187.59:443?insecure=1&sni=bing.com&pinSHA256=11C6DB32405C1FB57F94D1961222FAC63BE34984B4F6C88D1A237559B08BDA02#Intent;scheme=hy2;package=com.happ.proxy;end";
+            } else {
+                // Для iOS (и других систем) используем прямой протокол hy2://
+                window.location.href = rawConfig;
+            }
+        }
+
+        function copyConfig() {
+            navigator.clipboard.writeText(rawConfig).then(() => {
+                const toast = document.getElementById("toast");
+                toast.style.display = "block";
+                setTimeout(() => { toast.style.display = "none"; }, 4000);
+            });
+        }
+    </script>
 
 </body>
 </html>
